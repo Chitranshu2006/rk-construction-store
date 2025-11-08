@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In or Register{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-md w-full space-y-8 p-10 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
+        
+        <div>
+            <div class="flex justify-center">
+                {# Logo icon uses theme colors defined in base.html #}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-auto text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.964 3.964l.99-1.981a1 1 0 011.628-.14l.01.011a1 1 0 01-.14 1.628l-1.98.99M15.964 3.964a2 2 0 00-2.828 0l-6.364 6.364a2 2 0 000 2.828l2.828 2.828a2 2 0 002.828 0l6.364-6.364a2 2 0 000-2.828l-2.828-2.828z" /></svg>
+            </div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+                Sign in or Create an account
+            </h2>
+        </div>
+
+        {% if error %}
+            <p class="text-sm text-red-600 dark:text-red-400 text-center bg-red-100 dark:bg-red-900/30 p-3 rounded-md">{{ error }}</p>
+        {% endif %}
+
+        <form class="mt-8 space-y-6" method="POST" action="{{ url_for('login_register') }}">
+            {# Hidden input to track if the user is logging in or registering #}
+            <input type="hidden" name="mode" id="auth-mode" value="login">
+
+            {# Register-only Fields (Hidden by default) #}
+            <div id="register-fields" style="display: none;" class="space-y-4">
+                <input id="name" name="name" type="text" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Full Name">
+                <input id="phone" name="phone" type="tel" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Phone Number">
+                <input id="address" name="address" type="text" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Full Address">
+            </div>
+            
+            {# Email and Password (Always visible) #}
+            <input id="email-address" name="email" type="email" autocomplete="email" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Email address">
+            <input id="password" name="password" type="password" autocomplete="current-password" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Password">
+            
+            {# Confirm Password (Register-only) #}
+            <div id="confirm-password-field" style="display: none;">
+                <input id="confirm-password" name="confirm_password" type="password" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900 dark:text-white" placeholder="Confirm Password">
+            </div>
+
+            {# Login/Register Mode Switch Buttons #}
+            <div class="flex justify-center rounded-md shadow-sm" role="group">
+                <button type="button" id="btn-login" onclick="switchMode('login')" 
+                        class="py-2 px-4 text-sm font-medium rounded-l-lg border transition-colors">
+                    Login
+                </button>
+                <button type="button" id="btn-register" onclick="switchMode('register')" 
+                        class="py-2 px-4 text-sm font-medium rounded-r-md border transition-colors">
+                    Register
+                </button>
+            </div>
+            
+            {# Submit Button #}
+            <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 rounded-md font-semibold text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900 bg-blue-500 hover:bg-blue-600 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-600">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const authModeInput = document.getElementById('auth-mode');
+    const registerFields = document.getElementById('register-fields');
+    const confirmPasswordField = document.getElementById('confirm-password-field');
+    const btnLogin = document.getElementById('btn-login');
+    const btnRegister = document.getElementById('btn-register');
+
+    function updateButtonClasses(activeButton, inactiveButton) {
+        // Set active button styles
+        activeButton.classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+        activeButton.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white', 'border-gray-300', 'dark:border-gray-600', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+
+        // Set inactive button styles
+        inactiveButton.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white', 'border-gray-300', 'dark:border-gray-600', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+        inactiveButton.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+    }
+
+    function switchMode(mode) {
+        authModeInput.value = mode;
+        
+        if (mode === 'register') {
+            registerFields.style.display = 'block';
+            confirmPasswordField.style.display = 'block';
+            updateButtonClasses(btnRegister, btnLogin);
+        } else {
+            registerFields.style.display = 'none';
+            confirmPasswordField.style.display = 'none';
+            updateButtonClasses(btnLogin, btnRegister);
+        }
+    }
+    
+    // Initialize form state
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set initial mode based on Flask's view function logic or default to login
+        switchMode(authModeInput.value === 'register' ? 'register' : 'login');
+    });
+</script>
+{% endblock %}

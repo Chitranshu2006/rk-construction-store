@@ -1,0 +1,79 @@
+/* --- Custom CSS Variables for Day/Night Mode --- */
+:root {
+  /* Day Mode */
+  --day-bg: #87b5f1; /* light blue-ish */
+  --day-panel: #ffffff;
+  --day-text: #070724; /* nearly black */
+  --day-heading: #000000; /* pure black headers */
+  --day-label: #000000;
+
+  /* Night Mode */
+  --night-bg: #1f2937; /* dark gray */
+  --night-panel: #0f1724; /* dark blue-ish */
+  --night-text: #ffffff;
+  --night-heading: #ffffff;
+  --night-label: #ffffff;
+}
+
+/* --- Default (Light) Theme Overrides --- */
+body {
+  background-color: var(--day-bg) !important;
+  color: var(--day-text) !important;
+}
+
+.bg-white {
+  background-color: var(--day-panel) !important;
+}
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--day-bg) !important;
+}
+
+.text-gray-900, .text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800 {
+  color: var(--day-text) !important;
+}
+
+/* --- Headings and Labels (Day Mode) --- */
+h1, h2, h3, h4, h5, h6 , p, span, th, td, label, strong, b{
+  color: var(--day-heading) !important;
+  font-weight: 700;
+}
+
+label {
+  color: var(--day-label) !important;
+  font-weight: 500;
+}
+
+/* --- Dark Mode Overrides (.dark class applied to <body>) --- */
+.dark {
+  background-color: var(--night-bg) !important;
+  color: var(--night-text) !important;
+}
+
+.dark .bg-gray-800,
+.dark .bg-white {
+  background-color: var(--night-panel) !important;
+}
+.dark .bg-slate-900 {
+  background-color: var(--night-bg) !important;
+}
+
+.dark .text-gray-900,.dark .text-white, .dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700, .dark .text-gray-800  {
+  color: var(--night-text) !important;
+}
+
+/* --- Headings and Labels (Dark Mode) --- */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark p, .dark span, .dark th, .dark td, .dark label,
+.dark strong, .dark b {
+  color: var(--night-heading) !important;
+}
+
+.dark label {
+  color: var(--night-label) !important;
+}
+
+/* --- Table styling for WeasyPrint --- */
+table, th, td {
+  border-color: #005397;
+}
