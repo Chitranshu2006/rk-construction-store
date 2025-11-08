@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice - {{ order.id }}</title>
+
+  <style>
+    /* ============================
+       PURE BLACK & WHITE INVOICE
+       ============================ */
+    html, body {
+      background: #ffffff !important;
+      color: #000000 !important;
+      font-family: Arial, sans-serif;
+      margin: 24px 32px;
+    }
+
+    * {
+      box-shadow: none !important;
+      background: #ffffff !important;
+      color: #000000 !important;
+      border-color: #000000 !important;
+    }
+
+    h1, h2, h3, h4, h5 {
+      color: #000000 !important;
+      margin-bottom: 6px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #000000;
+      margin: 16px 0;
+    }
+
+    /* ---------- Table ---------- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 24px;
+    }
+
+    th, td {
+      border: 1px solid #000000;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #f4f4f4 !important;
+      font-weight: bold;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    /* ---------- Totals Table ---------- */
+    .totals {
+      width: 40%;
+      margin-left: auto;
+      border: none;
+    }
+
+    .totals td {
+      border: none;
+      padding: 4px;
+    }
+
+    .totals .label {
+      text-align: right;
+      font-weight: bold;
+      padding-right: 10px;
+    }
+
+    /* ---------- Button ---------- */
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      background: #000000 !important;
+      color: #ffffff !important;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #222222 !important;
+    }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #000000 !important;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .muted {
+      color: #000000 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>{{ bill_settings.companyName }}</h2>
+    <div class="muted">{{ bill_settings.companyAddress }}</div>
+  </div>
+
+  <hr>
+
+  <div>
+    <p><strong>Invoice ID:</strong> {{ order.id }}</p>
+    <p><strong>Customer:</strong> {{ order.customer_name or order.customer_email or 'N/A' }}</p>
+    <p><strong>Date:</strong> {{ order.date }}</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Price (₹)</th>
+        <th>Discount (₹)</th>
+        <th>Total (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if order.line_items and order.line_items|length > 0 %}
+        {% for it in order.line_items %}
+          <tr>
+            <td>{{ it.product_name or it.name }}</td>
+            <td>{{ it.quantity }}</td>
+            <td>{{ "%.2f"|format(it.price_at_purchase or it.price or 0) }}</td>
+            <td>{{ "%.2f"|format(it.discount_amount or 0) }}</td>
+            <td>{{ "%.2f"|format(it.line_total
+                                  if it.line_total is not none
+                                  else ((it.price_at_purchase or it.price or 0) * (it.quantity or 0) - (it.discount_amount or 0))) }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="5">No items found for this order.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <table class="totals">
+    <tr>
+      <td class="label">Taxable Value:</td>
+      <td class="right">
+        ₹{{ "%.2f"|format(order.calculated_totals.taxable_value if order.calculated_totals else 0) }}
+      </td>
+    </tr>
+    <tr>
+      <td class="label">CGST ({{ bill_settings.tax_rate_cgst }}%):</td>
+      <td class="right">
+        ₹{{ "%.2f"|format(order.calculated_totals.cgst_amount if order.calculated_totals else 0) }}
+      </td>
+    </tr>
+    <tr>
+      <td class="label">SGST ({{ bill_settings.tax_rate_sgst }}%):</td>
+      <td class="right">
+        ₹{{ "%.2f"|format(order.calculated_totals.sgst_amount if order.calculated_totals else 0) }}
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Grand Total:</td>
+      <td class="right">
+        <strong>₹{{ "%.2f"|format(order.calculated_totals.grand_total if order.calculated_totals else 0) }}</strong>
+      </td>
+    </tr>
+  </table>
+
+  <div class="footer">
+    <p><strong>Bank:</strong> {{ bill_settings.bank_name }}</p>
+    <p><strong>Account No:</strong> {{ bill_settings.account_number }}</p>
+    <p>{{ bill_settings.footerText }}</p>
+  </div>
+
+  {% if preview_mode %}
+    <div style="text-align:center; margin-top:20px;">
+      <a class="btn" href="{{ url_for('generate_order_pdf', order_id=order.id) }}">Download PDF</a>
+    </div>
+  {% endif %}
+</body>
+</html>

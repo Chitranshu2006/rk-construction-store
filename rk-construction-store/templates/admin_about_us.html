@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Edit About Us{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-4xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+    <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Edit About Us Page</h1>
+    
+    <form method="POST" action="{{ url_for('admin_about_us') }}" class="space-y-6">
+        
+        {# --- 1. INTRO PARAGRAPH --- #}
+        <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
+            <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Introduction Text (Under Title)</h2>
+            <label for="intro_text" class="block text-sm font-medium text-gray-700 dark:text-white mb-1">Intro Paragraph</label>
+            <textarea name="intro_text" id="intro_text" rows="4" required
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">{{ settings.intro_text }}</textarea>
+        </div>
+
+        {# --- 2. IMAGES SECTION --- #}
+        <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
+            <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Image Gallery (3 Slots)</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Provide direct URLs for the three images that appear after the introduction.</p>
+            
+            <div class="space-y-3">
+                {% for i in range(1, 4) %}
+                <label for="image_url_{{ i }}" class="block text-sm font-medium text-gray-700 dark:text-white">Image {{ i }} URL</label>
+                <input type="url" name="image_url_{{ i }}" id="image_url_{{ i }}" value="{{ settings['image_url_' ~ i] }}"
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+                {% endfor %}
+            </div>
+        </div>
+
+        {# --- 3. BODY TEXT --- #}
+        <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
+            <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Body Text (Under Images)</h2>
+            <label for="body_text" class="block text-sm font-medium text-gray-700 dark:text-white mb-1">Main Body Paragraph</label>
+            <textarea name="body_text" id="body_text" rows="4" required
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">{{ settings.body_text }}</textarea>
+        </div>
+
+        {# --- 4. GOOGLE MAPS URL --- #}
+        <div class="border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
+            <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Google Maps Location</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                Enter a simple address or search query (e.g., 123 Main Street).
+            </p>
+            <label for="map_url" class="block text-sm font-medium text-gray-700 dark:text-white mb-1">Address/Query</label>
+            
+            {# CRITICAL FIX: Changed type to 'text' to accept the simple address string for the search embed #}
+            <input type="text" name="map_url" id="map_url" value="{{ settings.map_url }}" required
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+
+        {# Submit Button #}
+        <div class="pt-4 text-right">
+            <button type="submit" 
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                Save About Us Content
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

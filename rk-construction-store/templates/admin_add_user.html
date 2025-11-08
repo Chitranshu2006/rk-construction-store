@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-lg mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+    <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Add New User</h1>
+    
+    <form method="POST" action="{{ url_for('admin_add_user') }}" class="space-y-4">
+        
+        <input type="hidden" name="mode" value="register"> 
+
+        <h3 class="text-lg font-semibold border-b pb-2 mb-4 text-gray-800 dark:text-gray-200">Account Credentials</h3>
+        
+        {# Email #}
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-white">Email (Login ID)</label>
+            <input type="email" name="email" id="email" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+        {# Password #}
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-white">Password</label>
+            <input type="password" name="password" id="password" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+        {# Role Selection #}
+        <div>
+            <label for="role" class="block text-sm font-medium text-gray-700 dark:text-white">User Role</label>
+            <select name="role" id="role" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+                <option value="customer">Customer</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+
+        <h3 class="text-lg font-semibold border-b pt-4 pb-2 mb-4 text-gray-800 dark:text-gray-200">Profile Details</h3>
+
+        {# Name #}
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-white">Full Name</label>
+            <input type="text" name="name" id="name" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+        {# Phone #}
+        <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-white">Phone Number</label>
+            <input type="tel" name="phone" id="phone" 
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+        {# Address #}
+        <div>
+            <label for="address" class="block text-sm font-medium text-gray-700 dark:text-white">Address</label>
+            <input type="text" name="address" id="address" 
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+
+        {# Submit Button #}
+        <div class="pt-4">
+            <button type="submit" 
+                    class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                Create User
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

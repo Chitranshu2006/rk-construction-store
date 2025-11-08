@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User: {{ profile.name }}{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-lg mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+    <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Edit User: {{ profile.name or profile.id[:8] }}</h1>
+    <h3 class="text-sm text-gray-500 dark:text-gray-400 mb-6">User ID: {{ profile.id }} (Email: {{ profile.email or 'N/A' }})</h3>
+
+    
+    <h2 class="text-xl font-bold border-b pb-2 mb-4 text-gray-900 dark:text-white">Profile Details</h2>
+
+    {# FORM 1: PROFILE DETAILS UPDATE #}
+    <form method="POST" action="{{ url_for('admin_edit_user', user_id=profile.id) }}" class="space-y-4">
+        
+        {# Role Selection #}
+        <div>
+            <label for="role" class="block text-sm font-medium text-gray-700 dark:text-white">User Role</label>
+            <select name="role" id="role" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+                <option value="customer" {% if profile.role == 'customer' %}selected{% endif %}>Customer</option>
+                <option value="admin" {% if profile.role == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+
+        {# Name #}
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-white">Full Name</label>
+            <input type="text" name="name" id="name" value="{{ profile.name or '' }}" required
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+        {# Phone #}
+        <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-white">Phone Number</label>
+            <input type="tel" name="phone" id="phone" value="{{ profile.phone or '' }}"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+        {# Address #}
+        <div>
+            <label for="address" class="block text-sm font-medium text-gray-700 dark:text-white">Address</label>
+            <input type="text" name="address" id="address" value="{{ profile.address or '' }}"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm">
+        </div>
+
+        {# Save Profile Changes Button #}
+        <div class="pt-4">
+            <button type="submit" 
+                    class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                Save Profile Changes
+            </button>
+        </div>
+    </form>
+    
+    <hr class="my-8 dark:border-gray-700">
+
+    
+    <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Change Password</h2>
+
+    {# FORM 2: PASSWORD CHANGE #}
+    <form method="POST" action="{{ url_for('admin_change_password', user_id=profile.id) }}" class="space-y-4">
+        
+        <div>
+            <label for="new_password" class="block text-sm font-medium text-gray-700 dark:text-white">New Password</label>
+            <input type="password" name="new_password" id="new_password" required minlength="6"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm"
+                   placeholder="Enter new password (min 6 characters)">
+        </div>
+
+        <div class="pt-2">
+            <button type="submit" class="w-full inline-flex justify-center py-2 px-4 shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                Reset Password
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
